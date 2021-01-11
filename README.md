@@ -5,7 +5,8 @@
 > 기본적으로 린터의 설정을 따르는 편입니다
 
 > 뭔가 불편하시거나 반박할 만한게 있다면\
-> 더 큰 발전을 위해 [issue](https://github.com/pmh-only/style/issues/new)를 보내주세요
+> 더 큰 발전을 위해 [issue](https://github.com/pmh-only/style/issues/new)를 보내주세요\
+> 조금이라도 기여하신 분들은 [이곳](thanksTo.md)에 적어드립니다
 
 ## 1. 변수/상수/함수 선언
 * 사용하지 않는 변수/상수/함수는 선언하지 않는다
