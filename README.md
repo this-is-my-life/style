@@ -4,6 +4,9 @@
 > JavaScript(TS) 기준으로 작성되었습니다\
 > 기본적으로 린터의 설정을 따르는 편입니다
 
+> 뭔가 불편하시거나 반박할 만한게 있다면\
+> 더 큰 발전을 위해 [issue](https://github.com/pmh-only/style/issues/new)를 보내주세요
+
 ## 1. 변수/상수/함수 선언
 * 사용하지 않는 변수/상수/함수는 선언하지 않는다
 
@@ -79,8 +82,8 @@ function doManyThings (key) { // 좋음
 ## 키워드 사용
 ### 조건문
 * `undefined`와 `null`의 감지는 `!`를 사용한다
-* 빈 문자열의 감지는 `string.length < 0`를 사용한다
-* 빈 배열과 빈 객체의 감지는 `array.length < 0`, `Object.keys(obj).length < 0`를 사용한다
+* 빈 문자열의 감지는 `string.length < 1`를 사용한다
+* 빈 배열과 빈 객체의 감지는 `array.length < 1`, `Object.keys(obj).length < 1`를 사용한다
 * 삼행연산은 선언문/대입문에서만 사용하는것을 권장한다
 
 ```js
@@ -91,9 +94,9 @@ const emptyObject = {}
 const [firstItem] = emptyArray // = undefined
 
 if (!firstItem) console.log('firstItem doesn\'t exist') // 좋음 (undefined의 감지는 !를 이용)
-if (emptyString.length < 0) console.log('string is empty') // 좋음 (빈 문자열의 감지는 length이용)
-if (emptyArray.length < 0) console.log('string is empty') // 좋음 (문자열과 마찬가지)
-if (Object.keys(emptyObject).length < 0) console.log('string is empty') // 좋음 (빈 객체의 감지는 Object.keys 사용)
+if (emptyString.length < 1) console.log('string is empty') // 좋음 (빈 문자열의 감지는 length이용)
+if (emptyArray.length < 1) console.log('string is empty') // 좋음 (문자열과 마찬가지)
+if (Object.keys(emptyObject).length < 1) console.log('string is empty') // 좋음 (빈 객체의 감지는 Object.keys 사용)
 
 const longerPerson = alice.age > bob.age ? 'alice' : 'bob' // 좋음 (선언문에서 삼행연산을 사용)
 ```
