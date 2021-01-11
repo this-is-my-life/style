@@ -5,6 +5,8 @@
 > 기본적으로 린터의 설정을 따르는 편입니다
 
 ## 1. 변수/상수/함수 선언
+* 사용하지 않는 변수/상수/함수는 선언하지 않는다
+
 ### 선언자
 * `const`의 사용을 1순위로 한다
 * `var`를 사용한 선언을 **금지**한다
@@ -65,8 +67,8 @@ const formatGreeter = (name) => 'Hello, ' + name + '!' // 좋음
 const formatLongURL = (baseURL, path, query) =>
   'https://' + baseURL + '/' + path + '?q=' + query // 좋음 (긴경우 화살표후 엔터)
 
-const doManyThings = (key) => { if (key.length < 3) { return null } else { return decrypt(key) } }
 // 자제 (화살표 함수에 너무 많은 작업이 몰려있음)
+const doManyThings = (key) => { if (key.length < 3) { return null } else { return decrypt(key) } }
 
 function doManyThings (key) { // 좋음
   if (key.length < 3) return null
@@ -74,14 +76,69 @@ function doManyThings (key) { // 좋음
 }
 ```
 
-2021/01/10 작성중..
-<!-- ## 키워드 사용
+## 키워드 사용
+### 조건문
+* `undefined`와 `null`의 감지는 `!`를 사용한다
+* 빈 문자열의 감지는 `string.length < 0`를 사용한다
+* 빈 배열과 빈 객체의 감지는 `array.length < 0`, `Object.keys(obj).length < 0`를 사용한다
+* 삼행연산은 선언문/대입문에서만 사용하는것을 권장한다
+
+```js
+const emptyString = ''
+const emptyArray = []
+const emptyObject = {}
+
+const [firstItem] = emptyArray // = undefined
+
+if (!firstItem) console.log('firstItem doesn\'t exist') // 좋음 (undefined의 감지는 !를 이용)
+if (emptyString.length < 0) console.log('string is empty') // 좋음 (빈 문자열의 감지는 length이용)
+if (emptyArray.length < 0) console.log('string is empty') // 좋음 (문자열과 마찬가지)
+if (Object.keys(emptyObject).length < 0) console.log('string is empty') // 좋음 (빈 객체의 감지는 Object.keys 사용)
+
+const longerPerson = alice.age > bob.age ? 'alice' : 'bob' // 좋음 (선언문에서 삼행연산을 사용)
+```
+
 ### 반복문
 * 라벨링을 사용한 반복을 **금지**한다
 * `for`의 사용을 1순위로 하며 `while` 사용은 자제한다
-* 배열 내용을 반복할경우 가독성을 위해 `.forEach()` 보다 `for (...in...)`를 권장한다
-* `continue`의 사용은 가능하되 라벨링은 **금지**한다
+* 배열 내용을 반복할경우 가독성을 위해 `.forEach()` 보다 `for (...of...)`를 권장한다 (단, 함수를 미리 선언 한 경우 `forEach`를 권장한다)
+* `continue`의 사용은 가능하되 `continue` 뒤에 아무런 구문을 적지 않는다
 
 ```js
+const fileExtensions = ['.c', '.cs', '.js', '.ts', 'namu']
+const validExtensions = []
 
-``` -->
+function logEach (item, index) {
+  console.log((index + 1) + '. ' + item)
+}
+
+for (const fileExtension of fileExtensions) { // 좋음 (of 키워드 사용)
+  if (!fileExtension.startsWith('.')) continue // 좋음 (continue뒤에 아무 구문 없음)
+  validExtensions.push(fileExtension)
+}
+
+validExtensions.forEach(logEach) // 좋음 (미리 선언된 함수는 forEach 사용)
+```
+
+## 비동기 작업
+* 기본적으로 비동기 작업의 사용을 자제한다
+* 모든 비동기 작업은 `async`, `await` 사용을 1순위로 한다
+* 가독성을 위해 `Promise`와 `Callback`의 사용을 자제한다
+
+```js
+// 좋음 (가독성을 위해 적절하게 await, Promise, Callback을 섞어 씀, 한줄로 json파싱까지 완료)
+const response = await fetch('https://h_api.pmh.codes').then((res) => res.json())
+
+async function doAsyncJob (id) { // 좋음 (await 사용)
+  const [data] = await db.select('*').from('userdata').where({ id })
+  return data
+}
+
+function doAsyncJob () { // 자제 (Callback 지옥임, 참고로 이 함수는 위 함수와 같은일을 함)
+  return new Promise((resolve, reject) => {
+    db.select('*').from('userdata').where({ id }).then(([data]) => {
+      resolve(data)
+    }).catch(reject)
+  })
+}
+```
